@@ -1,51 +1,61 @@
-// import * as contactsService from "../services/contactsServices.js";
-import Contact from "../models/contact.js";
 import HttpError from "../helpers/HttpError.js";
 import ctrlWrapper from "../helpers/crtlWrapper.js";
+import Contact from "../models/contact.js";
 
 const getAllContacts = async (req, res) => {
   const result = await Contact.find();
   res.json(result);
 };
 
-// const getOneContact = async (req, res) => {
-//   const { id } = req.params;
-//   const result = await contactsService.getContactById(id);
+const getOneContact = async (req, res) => {
+  const { id } = req.params;
 
-//   if (!result) {
-//     throw HttpError(404, "Not found");
-//   }
-//   res.json(result);
-// };
+  const result = await Contact.findOne({ _id: id });
 
-// const deleteContact = async (req, res) => {
-//   const { id } = req.params;
-//   const result = await contactsService.removeContact(id);
-//   if (!result) {
-//     throw HttpError(404, "Not found");
-//   }
+  if (!result) {
+    throw HttpError(404, "Not found");
+  }
+  res.json(result);
+};
 
-//   res.json({
-//     message: "Delete success",
-//   });
-// };
+const deleteContact = async (req, res) => {
+  const { id } = req.params;
+  const result = await Contact.findByIdAndDelete(id);
+  if (!result) {
+    throw HttpError(404, "Not found");
+  }
 
-// const createContact = async (req, res) => {
-//   const result = await contactsService.addContact(req.body);
-//   res.status(201).json(result);
-// };
+  res.json({
+    message: "Delete success",
+  });
+};
 
-// const updateContact = async (req, res) => {
-//   const { id } = req.params;
-//   const result = await contactsService.updateContact(id, req.body);
-//   if (!result) {
-//     throw HttpError(404, "Not found");
-//   }
-//   res.json(result);
-// };
+const createContact = async (req, res) => {
+  const result = await Contact.create(req.body);
+  res.status(201).json(result);
+};
+
+const updateContact = async (req, res) => {
+  const { id } = req.params;
+  const result = await Contact.findByIdAndUpdate(id, req.body, { new: true });
+  if (!result) {
+    throw HttpError(404, "Not found");
+  }
+  res.json(result);
+};
+
+const updateStatusContact = async (req, res) => {
+  const { id } = req.params;
+  const result = await Contact.findByIdAndUpdate(id, req.body, { new: true });
+  if (!result) {
+    throw HttpError(404, "Not found");
+  }
+  res.json(result);
+};
 
 export const wrappedGetAllContacts = ctrlWrapper(getAllContacts);
-// export const wrappedGetOneContact = ctrlWrapper(getOneContact);
-// export const wrappedDeleteContact = ctrlWrapper(deleteContact);
-// export const wrappedCreateContact = ctrlWrapper(createContact);
-// export const wrappedUpdateContact = ctrlWrapper(updateContact);
+export const wrappedGetOneContact = ctrlWrapper(getOneContact);
+export const wrappedDeleteContact = ctrlWrapper(deleteContact);
+export const wrappedCreateContact = ctrlWrapper(createContact);
+export const wrappedUpdateContact = ctrlWrapper(updateContact);
+export const wrappedUpdateFavorite = ctrlWrapper(updateStatusContact);
