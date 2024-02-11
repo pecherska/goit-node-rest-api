@@ -4,7 +4,7 @@ import HttpError from "../helpers/HttpError.js";
 import ctrlWrapper from "../helpers/crtlWrapper.js";
 
 const getAllContacts = async (req, res) => {
-  const result = await contactsService.listContacts();
+  const result = await Contact.find();
   res.json(result);
 };
 
