@@ -3,16 +3,16 @@ import { fileURLToPath } from "url";
 import { join, dirname } from "path";
 import { nanoid } from "nanoid";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+// const __dirname = dirname(fileURLToPath(import.meta.url));
 
-const contactsPath = join(__dirname, "../db", "contacts.json");
+// const contactsPath = join(__dirname, "../db", "contacts.json");
 
-async function listContacts() {
-  const contacts = await fs.readFile(contactsPath);
-  console.log(contacts);
-  return JSON.parse(contacts);
-}
-listContacts();
+// async function listContacts() {
+//   const contacts = await fs.readFile(contactsPath);
+//   console.log(contacts);
+//   return JSON.parse(contacts);
+// }
+// listContacts();
 
 async function getContactById(contactId) {
   const contacts = await listContacts();
