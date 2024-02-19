@@ -9,7 +9,7 @@ dotenv.config();
 const { SECRET_KEY } = process.env;
 
 const register = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, subscription, password } = req.body;
   const user = await User.findOne({ email });
   if (user) {
     throw HttpError(409, "Email in use");
@@ -18,12 +18,13 @@ const register = async (req, res) => {
   const hashPassword = await bcrypt.hash(password, 10);
   const newUser = await User.create({ ...req.body, password: hashPassword });
   res.status(201).json({
-    email: newUser.email,
+    // email: newUser.email,
+    user: { email: newUser.email, subscription: newUser.subscription },
   });
 };
 
 const login = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, subscription, password } = req.body;
   const user = await User.findOne({ email });
   if (!user) {
     throw HttpError(401, "Email or password is wrong");
@@ -40,23 +41,25 @@ const login = async (req, res) => {
   await User.findByIdAndUpdate(user._id, { token });
   res.json({
     token,
+    user: {
+      email: user.email,
+      subscription: user.subscription,
+    },
   });
 };
 
 const getCurrent = async (req, res) => {
-  const { email, name } = req.user;
+  const { email, subscription } = req.user;
   res.json({
     email,
-    name,
+    subscription,
   });
 };
 
 const logout = async (req, res) => {
   const { _id } = req.user;
   await User.findByIdAndUpdate(_id, { token: null });
-  res.json({
-    message: "Logout success",
-  });
+  res.status(204).json();
 };
 
 export const wrappedRegister = ctrlWrapper(register);
