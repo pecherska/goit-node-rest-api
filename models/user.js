@@ -29,6 +29,14 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
+    verify: {
+      type: Boolean,
+      default: false,
+    },
+    verificationToken: {
+      type: String,
+      required: [true, "Verify token is required"],
+    },
   },
   { versionKey: false, timestamps: true }
 );
@@ -43,6 +51,10 @@ export const registerSchema = Joi.object({
 export const loginSchema = Joi.object({
   email: Joi.string().pattern(emailRegex).required(),
   password: Joi.string().min(4).required(),
+});
+
+export const emailSchema = Joi.object({
+  email: Joi.string().pattern(emailRegex).required(),
 });
 
 const User = model("user", userSchema);
